@@ -2,7 +2,7 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 预处理
+// Pretreatment
 #pragma once
 #include <Windows.h>
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -10,41 +10,41 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// CAboutDlg 类
+// CAboutDlg class
 class CAboutDlg
 {
 public:
-	static TCHAR m_tzStatus[64];	// 状态信息字符串
+	static TCHAR m_tzStatus[64];	// Status message string
 
 private:
-	static HWND m_hWnd;				// 窗口句柄
-	static BOOL m_bSplash;			// 是否以 Splash 方式显示
-	static INT m_iLinkIndex;		// 当前超链接
+	static HWND m_hWnd;				// Window handle
+	static BOOL m_bSplash;			// Whether to display Splash
+	static INT m_iLinkIndex;		// Current Hyperlinks
 
 public:
-	// 显示关于对话框
+	// Display the About dialog box
 	static VOID WINAPI Show(HWND hParent = NULL);
 
-	// 以 Splash 方式显示关于对话框
+	// Splash to display the About dialog box
 	static VOID WINAPI Splash(HWND hParent = NULL, UINT uTimer = 1000);
 
-	// 关闭窗口关于对话框
+	// Close the About dialog box
 	static VOID WINAPI Close(UINT uTimer = 0);
 
-	// 设置状态信息
+	// Setting status information
 	static VOID WINAPI SetStatus(PCTSTR ptzText = NULL);
 
 private:
-	// 关于对话框回调函数
+	// About dialog box callback function
 	static INT_PTR CALLBACK AboutDlgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-	// 绘制对话框
+	// Draw dialog box
 	static VOID WINAPI OnPaint();
 
-	// 获取指定点的超链接
+	// Gets the specified point hyperlinks
 	static INT WINAPI GetLinkIndex(POINT ptPoint);
 
-	// 绘制超链接
+	// Draw Hyperlinks
 	static VOID WINAPI PaintLinks(HDC hDC);
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

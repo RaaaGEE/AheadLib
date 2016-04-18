@@ -2,7 +2,7 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 预处理
+// Pretreatment
 #pragma once
 #include "Main.h"
 #include "MapFile.h"
@@ -11,10 +11,10 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 构造函数，映射文件为只读
+// Constructor, map file is read-only
 WINAPI CMapFile::CMapFile(PCTSTR ptzFileName)
 {
-	// 打开文件
+	// open file
 	_Assert(ptzFileName);
 	m_dwSize = 0;
 	m_pvFile = NULL;
@@ -22,15 +22,15 @@ WINAPI CMapFile::CMapFile(PCTSTR ptzFileName)
 	m_hFile = _CreateFileForRead(ptzFileName);
 	if (m_hFile != INVALID_HANDLE_VALUE)
 	{
-		// 获取文件大小
+		// get file size
 		m_dwSize = GetFileSize(m_hFile, NULL);
 		if ((m_dwSize != INVALID_FILE_SIZE) && m_dwSize)
 		{
-			// 创建文件映射
+			// Create file mapping
 			m_hMapping = CreateFileMapping(m_hFile, NULL, PAGE_READONLY, 0, 0, NULL);
 			if (m_hMapping)
 			{
-				// 映射文件
+				// Mapping file
 				m_pvFile = MapViewOfFile(m_hMapping, FILE_MAP_READ, 0, 0, 0);
 			}
 		}
@@ -40,10 +40,10 @@ WINAPI CMapFile::CMapFile(PCTSTR ptzFileName)
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 构造函数，映射文件为可读写
+// Constructor, map files to be read
 WINAPI CMapFile::CMapFile(PCTSTR ptzFileName, DWORD dwSize)
 {
-	// 打开文件
+	// open file
 	_Assert(ptzFileName && dwSize);
 	m_dwSize = 0;
 	m_pvFile = NULL;
@@ -51,12 +51,12 @@ WINAPI CMapFile::CMapFile(PCTSTR ptzFileName, DWORD dwSize)
 	m_hFile = _CreateFileForAppend(ptzFileName);
 	if (m_hFile != INVALID_HANDLE_VALUE)
 	{
-		// 创建文件映射
+		// Create file mapping
 		m_dwSize = dwSize;
 		m_hMapping = CreateFileMapping(m_hFile, NULL, PAGE_READWRITE, 0, m_dwSize, NULL);
 		if (m_hMapping)
 		{
-			// 映射文件
+			// Mapping file
 			m_pvFile = MapViewOfFile(m_hMapping, FILE_MAP_ALL_ACCESS, 0, 0, 0);
 		}
 	}
@@ -66,7 +66,7 @@ WINAPI CMapFile::CMapFile(PCTSTR ptzFileName, DWORD dwSize)
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 析构函数
+// Destructor
 WINAPI CMapFile::~CMapFile()
 {
 	if (m_pvFile)

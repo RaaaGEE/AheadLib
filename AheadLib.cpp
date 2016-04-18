@@ -2,7 +2,7 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 预处理
+// Pretreatment
 #include "Main.h"
 #include "AheadLib.h"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -10,19 +10,19 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 常量
+// constant
 const CHAR STR_BlockHeader[] = "\r\n\r\n\r\n////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////\r\n";
 const CHAR STR_BlockTail[] = "////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////\r\n";
 
-const CHAR STR_Preprocessor[] = "// 头文件\r\n#include <Windows.h>\r\n";
+const CHAR STR_Preprocessor[] = "// header\r\n#include <Windows.h>\r\n";
 
-const CHAR STR_ExportComment[] = "// 导出函数\r\n";
+const CHAR STR_ExportComment[] = "// Export function\r\n";
 const CHAR STR_ExportRedirect[] = "#pragma comment(linker, \"/EXPORT:%s=%s.%s,@%d\")\r\n";
 const CHAR STR_ExportNormal[] = "#pragma comment(linker, \"/EXPORT:%s%s=_AheadLib_%s,@%d\")\r\n";
 const CHAR STR_ExportNoname[] = "#pragma comment(linker, \"/EXPORT:Noname%d=_AheadLib_Noname%d,@%d,NONAME\")\r\n";
 
 const CHAR STR_Macro[] =
-	"// 宏定义\r\n"
+	"// Macro definition\r\n"
 	"#define EXTERNC extern \"C\"\r\n"
 	"#define NAKED __declspec(naked)\r\n"
 	"#define EXPORT __declspec(dllexport)\r\n"
@@ -33,13 +33,13 @@ const CHAR STR_Macro[] =
 	"#define ALCDECL EXTERNC NAKED void __cdecl\r\n";
 
 const CHAR STR_Hook[] =
-	"// Hook 命名空间\r\n"
+	"// Hook Namespaces\r\n"
 	"namespace Hook\r\n"
 	"{\r\n"
-	"	HHOOK m_hHook;\r\n			// HOOK 句柄\r\n"
+	"	HHOOK m_hHook;\r\n			// HOOK Handle\r\n"
 	"\r\n"
 	"\r\n"
-	"	// HOOK 函数\r\n"
+	"	// HOOK function\r\n"
 	"	LRESULT CALLBACK HookProc(INT iCode, WPARAM wParam, LPARAM lParam)\r\n"
 	"	{\r\n"
 	"		if (iCode > 0)\r\n"
@@ -68,14 +68,14 @@ const CHAR STR_Hook[] =
 	"}\r\n";
 
 const CHAR STR_AheadLib1[] =
-	"// AheadLib 命名空间\r\n"
+	"// AheadLib Namespaces\r\n"
 	"namespace AheadLib\r\n"
 	"{\r\n"
-	"	HMODULE m_hModule = NULL;	// 原始模块句柄\r\n"
-	"	DWORD m_dwReturn[%d] = {0};	// 原始函数返回地址\r\n"
+	"	HMODULE m_hModule = NULL;	// Original module handle\r\n"
+	"	DWORD m_dwReturn[%d] = {0};	// Original function return address\r\n"
 	"\r\n"
 	"\r\n"
-	"	// 加载原始模块\r\n"
+	"	// Loading original module\r\n"
 	"	inline BOOL WINAPI Load()\r\n"
 	"	{\r\n"
 	"		TCHAR tzPath[MAX_PATH];\r\n"
@@ -85,14 +85,14 @@ const CHAR STR_AheadLib1[] =
 	"		m_hModule = LoadLibrary(tzPath);\r\n"
 	"		if (m_hModule == NULL)\r\n"
 	"		{\r\n"
-	"			wsprintf(tzTemp, TEXT(\"无法加载 %%s，程序无法正常运行。\"), tzPath);\r\n"
+	"			wsprintf(tzTemp, TEXT(\"Could not load %%s, it does not work properly.\"), tzPath);\r\n"
 	"			MessageBox(NULL, tzTemp, TEXT(\"AheadLib\"), MB_ICONSTOP);\r\n"
 	"		}\r\n"
 	"\r\n"
 	"		return (m_hModule != NULL);	\r\n"
 	"	}\r\n"
 	"		\r\n"
-	"	// 释放原始模块\r\n"
+	"	// Release original module\r\n"
 	"	inline VOID WINAPI Free()\r\n"
 	"	{\r\n"
 	"		if (m_hModule)\r\n"
@@ -103,7 +103,7 @@ const CHAR STR_AheadLib1[] =
 	"\r\n";
 
 const CHAR STR_AheadLib2[] =
-	"	// 获取原始函数地址\r\n"
+	"	// Get original function address\r\n"
 	"	FARPROC WINAPI GetAddress(PCSTR pszProcName)\r\n"
 	"	{\r\n"
 	"		FARPROC fpAddress;\r\n"
@@ -120,7 +120,7 @@ const CHAR STR_AheadLib2[] =
 	"				pszProcName = szProcName;\r\n"
 	"			}\r\n"
 	"\r\n"
-	"			wsprintf(tzTemp, TEXT(\"无法找到函数 %%hs，程序无法正常运行。\"), pszProcName);\r\n"
+	"			wsprintf(tzTemp, TEXT(\"Unable to find function %%hs, program cannot run properly.\"), pszProcName);\r\n"
 	"			MessageBox(NULL, tzTemp, TEXT(\"AheadLib\"), MB_ICONSTOP);\r\n"
 	"			ExitProcess(-2);\r\n"
 	"		}\r\n"
@@ -143,7 +143,7 @@ const CHAR STR_LoadInNeed[] =
 	"\r\n";
 
 const CHAR STR_DllMain[] =
-	"// 入口函数\r\n"
+	"// Entry function\r\n"
 	"BOOL WINAPI DllMain(HMODULE hModule, DWORD dwReason, PVOID pvReserved)\r\n"
 	"{\r\n"
 	"	if (dwReason == DLL_PROCESS_ATTACH)\r\n"
@@ -180,7 +180,7 @@ const CHAR STR_LoadInEntry[] = "\r\n		return Load();\r\n";
 const CHAR STR_FreeInEntry[] = "\r\n		Free();";
 
 const CHAR STR_JumpToOrigin[] =
-	"// 导出函数\r\n"
+	"// Export function\r\n"
 	"%s\r\n"
 	"{\r\n"
 	"	GetAddress(%s);\r\n"
@@ -188,27 +188,27 @@ const CHAR STR_JumpToOrigin[] =
 	"}\r\n";
 
 const CHAR STR_CallOrigin[] =
-	"// 导出函数\r\n"
+	"// Export function\r\n"
 	"%s\r\n"
 	"{\r\n"
-	"	// 保存返回地址\r\n"
+	"	// Save the return address\r\n"
 	"	__asm POP m_dwReturn[%d * TYPE long];\r\n\r\n"
-	"	// 调用原始函数\r\n"
+	"	// Call the original function\r\n"
 	"	GetAddress(%s)();\r\n\r\n"
-	"	// 转跳到返回地址\r\n"
+	"	// Jump to the return address\r\n"
 	"	__asm JMP m_dwReturn[%d * TYPE long];\r\n"
 	"}\r\n";
 
 const CHAR STR_CallOriginTls[] =
-	"// 导出函数\r\n"
+	"// Export function\r\n"
 	"%s\r\n"
 	"{\r\n"
-	"	// 保存返回地址到 TLS\r\n"
+	"	// Save the return address to TLS\r\n"
 	"	__asm PUSH m_dwReturn[%d * TYPE long];\r\n"
 	"	__asm CALL DWORD PTR [TlsSetValue];\r\n\r\n"
-	"	// 调用原始函数\r\n"
+	"	// Call the original function\r\n"
 	"	GetAddress(%s)();\r\n\r\n"
-	"	// 获取返回地址并返回\r\n"
+	"	// Get the return address and return\r\n"
 	"	__asm PUSH EAX;\r\n"
 	"	__asm PUSH m_dwReturn[%d * TYPE long];\r\n"
 	"	__asm CALL DWORD PTR [TlsGetValue];\r\n"
@@ -216,14 +216,14 @@ const CHAR STR_CallOriginTls[] =
 	"	__asm RET;\r\n"
 	"}\r\n";
 
-const CHAR STR_ExportVariable[] = "// 导出变量\r\nEXPORT %s;\r\n";
+const CHAR STR_ExportVariable[] = "// Derived variables\r\nEXPORT %s;\r\n";
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// CAheadLib 类静态成员变量
+// CAheadLib Static member variables
 BOOL CAheadLib::m_bCallRedirect = FALSE;
 BOOL CAheadLib::m_bLoadIfNeed = FALSE;
 BOOL CAheadLib::m_bJumpToOrigin = FALSE;
@@ -257,65 +257,65 @@ ALRESULT WINAPI CAheadLib::Generate(BOOL bWriteCppFile)
 
 	_Try
 	{
-		// 初始化
+		// initialization
 		pszFile = NULL;
 		ppszNames = NULL;
 		pszBuffer = NULL;
 		SetDlgItemTextA(CMainDlg::m_hWnd, IDC_Preview, NULL);
 
-		// 判断参数是否完整
+		// Analyzing parameters is complete
 		_LeaveExIf((m_szOrigin[0] == 0) || (m_tzDllFile[0] == 0) || (bWriteCppFile && (m_tzDllFile[0] == 0)),
 			alResult = ALResult_InvalidArgs);
 
-		// 打开 DLL 文件
+		// Open DLL file
 		CMapFile mfFile(m_tzDllFile);
 		pszFile = (PSTR) mfFile.m_pvFile;
 		_LeaveExIf(pszFile == NULL, alResult = ALResult_OpenDllFile);
 		_LeaveExIf(mfFile.m_dwSize < 512, alResult = ALResult_InvalidPeFile);
 
-		// 判断是否为 PE 文件
+		// Determine whether PE file
 		pInh = (PIMAGE_NT_HEADERS) (pszFile + ((PIMAGE_DOS_HEADER) pszFile)->e_lfanew);
 		_LeaveExIf(pInh->Signature != IMAGE_NT_SIGNATURE, alResult = ALResult_InvalidPeFile);
 
-		// 定位导出表
+		// Export Table positioning
 		dwSize = pInh->OptionalHeader.DataDirectory[0].VirtualAddress;
 		_LeaveExIf(dwSize == 0, alResult = ALResult_NoExportTable);
 		pIed = (PIMAGE_EXPORT_DIRECTORY) (pszFile + RvaToOffset(pInh, dwSize));
 
-		// 获取 Names 和 Ordinals
+		// Get Names and Ordinals
 		pdwNames = (PDWORD) (pszFile + RvaToOffset(pInh, pIed->AddressOfNames));
 		pwNamesOrdinals = (PWORD) (pszFile + RvaToOffset(pInh, pIed->AddressOfNameOrdinals));
 
-		// 分配内存
+		// Allocate memory
 		ppszNames = (PSTR *) _HeapAllocZero(sizeof(PSTR) * pIed->NumberOfFunctions);
 		_LeaveExIf(ppszNames == NULL, alResult = ALResult_HeapAlloc);
 
-		// 获取导出函数名称
+		// Being exported function name
 		for (i = 0; i < pIed->NumberOfNames; i++)
 		{
 			ppszNames[pwNamesOrdinals[i]] = pszFile + RvaToOffset(pInh, pdwNames[i]);
 		}
 
-		// 分配内存
+		// Allocate memory
 		pszBuffer = (PSTR) _HeapAlloc(4096 + 1024 * pIed->NumberOfFunctions);
 		_LeaveExIf(pszBuffer == NULL, alResult = ALResult_HeapAlloc);
 
-		// 生成代码并设置到预览编辑框
+		// Preview and generate code to set the edit box
 		dwSize = GenerateCode(pszBuffer, ppszNames, pIed->Base, pIed->NumberOfFunctions, bLoadOrigin);
 		SetDlgItemTextA(CMainDlg::m_hWnd, IDC_Preview, pszBuffer);
 
-		// 写入到文件
+		// Written to file
 		if (bWriteCppFile)
 		{
 			_LeaveExIf(WriteCppFile(pszBuffer, dwSize) == FALSE, alResult = ALResult_WriteCppFile);
 		}
 
-		// 执行成功
+		// execution succeed
 		alResult = (bLoadOrigin && m_bCallRedirect) ? ALResult_NotAllRedirect : ALResult_Success;
 	}
 	_Finally
 	{
-		// 释放
+		// freed
 		_ExIf(pszBuffer, _HeapFree(pszBuffer));
 		_ExIf(ppszNames, _HeapFree(ppszNames));
 
@@ -327,22 +327,22 @@ ALRESULT WINAPI CAheadLib::Generate(BOOL bWriteCppFile)
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 生成代码
+// Generate code
 DWORD WINAPI CAheadLib::GenerateCode(PSTR pszBuffer, PSTR* ppszNames, DWORD dwBase, DWORD dwCount, BOOL& bLoadOrigin)
 {
 	PSTR p;
 	DWORD i;
 
-	// 预处理
+	// Pretreatment
 	p = pszBuffer;
 	CopyString(p, STR_BlockHeader, _LengthOf(STR_BlockHeader));
 	CopyString(p, STR_Preprocessor, _LengthOf(STR_Preprocessor));
 	CopyString(p, STR_BlockTail, _LengthOf(STR_BlockTail));
 
-	// 导出函数
+	// Export function
 	bLoadOrigin = GenerateExport(p, ppszNames, dwBase, dwCount);
 
-	// 宏定义
+	// Macro definition
 	if (bLoadOrigin)
 	{
 		CopyString(p, STR_BlockHeader, _LengthOf(STR_BlockHeader));
@@ -350,7 +350,7 @@ DWORD WINAPI CAheadLib::GenerateCode(PSTR pszBuffer, PSTR* ppszNames, DWORD dwBa
 		CopyString(p, STR_BlockTail, _LengthOf(STR_BlockTail));
 	}
 
-	// HOOK 代码
+	// HOOK Code
 	if (m_bGenerateHook)
 	{
 		CopyString(p, STR_BlockHeader, _LengthOf(STR_BlockHeader));
@@ -358,7 +358,7 @@ DWORD WINAPI CAheadLib::GenerateCode(PSTR pszBuffer, PSTR* ppszNames, DWORD dwBa
 		CopyString(p, STR_BlockTail, _LengthOf(STR_BlockTail));
 	}
 
-	// AheadLib 代码
+	// AheadLib Code
 	if (bLoadOrigin)
 	{
 		CopyString(p, STR_BlockHeader, _LengthOf(STR_BlockHeader));
@@ -370,7 +370,7 @@ DWORD WINAPI CAheadLib::GenerateCode(PSTR pszBuffer, PSTR* ppszNames, DWORD dwBa
 		CopyString(p, STR_BlockTail, _LengthOf(STR_BlockTail));
 	}
 
-	// 入口函数
+	// Entry function
 	CopyString(p, STR_BlockHeader, _LengthOf(STR_BlockHeader));
 	p += wsprintfA(p, STR_DllMain,
 		m_bMultiThread ? STR_TlsAlloc: NULL,
@@ -382,10 +382,10 @@ DWORD WINAPI CAheadLib::GenerateCode(PSTR pszBuffer, PSTR* ppszNames, DWORD dwBa
 		m_bGenerateHook ? STR_HookUnhook : NULL);
 	CopyString(p, STR_BlockTail, _LengthOf(STR_BlockTail));
 
-	// 函数
+	// function
 	for (i = 0; i < dwCount; i++)
 	{
-		// 如果可以直接转发
+		// If forwarded directly
 		if (CanRedirect(ppszNames[i]) == FALSE)
 		{
 			GenerateFunction(p, ppszNames[i], dwBase, i);
@@ -401,7 +401,7 @@ DWORD WINAPI CAheadLib::GenerateCode(PSTR pszBuffer, PSTR* ppszNames, DWORD dwBa
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 设置选项可用状态
+// Setting options available state
 VOID WINAPI CAheadLib::SetOptionsEnabled()
 {
 	EnableWindow(GetDlgItem(CMainDlg::m_hWnd, IDC_LoadInEntry), m_bCallRedirect == FALSE);
@@ -416,7 +416,7 @@ VOID WINAPI CAheadLib::SetOptionsEnabled()
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 从 INI 中载入选项设置
+// Loading option settings from INI
 VOID WINAPI CAheadLib::LoadOptions()
 {
 	m_bCallRedirect = CIni::GetInt(INI_CallRedirect);
@@ -449,7 +449,7 @@ VOID WINAPI CAheadLib::LoadOptions()
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 保存选项设置
+// Save option
 VOID WINAPI CAheadLib::SaveOptions()
 {
 	CIni::SetInt(INI_CallRedirect, m_bCallRedirect);
@@ -466,7 +466,7 @@ VOID WINAPI CAheadLib::SaveOptions()
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 读取选项设置
+// Read option
 VOID WINAPI CAheadLib::GetOptions()
 {
 	m_bCallRedirect = IsDlgButtonChecked(CMainDlg::m_hWnd, IDC_CallRedirect);
@@ -483,7 +483,7 @@ VOID WINAPI CAheadLib::GetOptions()
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 生成导出指示符
+// Generate export indicator
 BOOL WINAPI CAheadLib::GenerateExport(PSTR& pszBuffer, PSTR* ppszNames, DWORD dwBase, DWORD dwCount)
 {
 	PSTR p;
@@ -495,10 +495,10 @@ BOOL WINAPI CAheadLib::GenerateExport(PSTR& pszBuffer, PSTR* ppszNames, DWORD dw
 	bPragmaExport = FALSE;
 	for (i = 0; i < dwCount; i++)
 	{
-		// 如果可以直接转发
+		// If forwarded directly
 		if (CanRedirect(ppszNames[i]))
 		{
-			// 转发导出函数
+			// Export forwarding function
 			PragmaExport(pszBuffer, bPragmaExport, dwBase + i, ppszNames[i], TRUE);
 		}
 		else
@@ -506,17 +506,17 @@ BOOL WINAPI CAheadLib::GenerateExport(PSTR& pszBuffer, PSTR* ppszNames, DWORD dw
 			switch (GetExportType(ppszNames[i], p))
 			{
 			case ET_NONAME:
-				// 无名称导出函数
+				// No name of the export function
 				PragmaExport(pszBuffer, bPragmaExport, dwBase + i);
 				break;
 
 			case ET_CDECL:
-				// 常规导出函数
+				// General Export function
 				PragmaExport(pszBuffer, bPragmaExport, dwBase + i, ppszNames[i]);
 				break;
 
 			//default:
-				// 直接用 __declspec(dllexport) 导出
+				// Directly __declspec(dllexport) Export
 			}
 
 			bLoadOrigin = TRUE;
@@ -535,7 +535,7 @@ BOOL WINAPI CAheadLib::GenerateExport(PSTR& pszBuffer, PSTR* ppszNames, DWORD dw
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 生成函数
+// Generating function
 VOID WINAPI CAheadLib::GenerateFunction(PSTR& pszBuffer, PSTR pszName, DWORD dwBase, DWORD dwIndex)
 {
 	CHAR szCallName[MAX_PATH];
@@ -545,15 +545,15 @@ VOID WINAPI CAheadLib::GenerateFunction(PSTR& pszBuffer, PSTR pszName, DWORD dwB
 	GenerateDeclaration(szDeclaration, szCallName, pszName, dwBase + dwIndex);
 	if (szDeclaration[lstrlenA(szDeclaration) - 1] == ')')
 	{
-		// 函数
+		// function
 		if (m_bJumpToOrigin)
 		{
-			// 直接转跳到原始函数
+			// Skip directly to original function
 			pszBuffer += wsprintfA(pszBuffer, STR_JumpToOrigin, szDeclaration, szCallName);
 		}
 		else
 		{
-			// 调用后返回
+			// Back after call
 			pszBuffer += wsprintfA(pszBuffer,
 				(m_bMultiThread ? STR_CallOriginTls : STR_CallOrigin),
 				szDeclaration, dwIndex, szCallName, dwIndex);
@@ -561,7 +561,7 @@ VOID WINAPI CAheadLib::GenerateFunction(PSTR& pszBuffer, PSTR pszName, DWORD dwB
 	}
 	else
 	{
-		// 变量
+		// variable
 		pszBuffer += wsprintfA(pszBuffer, STR_ExportVariable, szDeclaration);
 	}
 	CopyString(pszBuffer, STR_BlockTail, _LengthOf(STR_BlockTail));
@@ -571,7 +571,7 @@ VOID WINAPI CAheadLib::GenerateFunction(PSTR& pszBuffer, PSTR pszName, DWORD dwB
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 生成合法的函数名称
+// Generate legal function name
 VOID WINAPI CAheadLib::GenerateDeclaration(PSTR pszDeclaration, PSTR pszCallName, PSTR pszName, DWORD Ordinals)
 {
 	PSTR p;
@@ -581,10 +581,10 @@ VOID WINAPI CAheadLib::GenerateDeclaration(PSTR pszDeclaration, PSTR pszCallName
 	switch (etType)
 	{
 	case ET_CPP:
-		// C++ 方式导出
+		// C++ Export Information
 		if (pszName[lstrlenA(pszName) - 1] != 'A')
 		{
-			// 如果是导出函数
+			// If the function is exported
 			CopyString(pszDeclaration, "ALCPP ", _LengthOf("ALCPP "));
 		}
 		m_pUnDecorateSymbolName(pszName, pszDeclaration, MAX_PATH * 2, 0);
@@ -592,7 +592,7 @@ VOID WINAPI CAheadLib::GenerateDeclaration(PSTR pszDeclaration, PSTR pszCallName
 
 	case ET_STD:
 	case ET_FAST:
-		// __fastcall/__stdcall 方式导出
+		// __fastcall/__stdcall Export Information
 		if (etType == ET_STD)
 		{
 			CopyString(pszDeclaration,  "ALSTD ", _LengthOf("ALSTD "));
@@ -606,20 +606,20 @@ VOID WINAPI CAheadLib::GenerateDeclaration(PSTR pszDeclaration, PSTR pszCallName
 		break;
 
 	case ET_CDECL:
-		// __cdecl 方式导出
+		// __cdecl Export Information
 		wsprintfA(pszDeclaration, "ALCDECL AheadLib_%s(void)", pszName);
 		break;
 
 	case ET_NONAME:
-		// __cdecl 方式导出
+		// __cdecl Export Information
 		wsprintfA(pszDeclaration, "ALCDECL AheadLib_Noname%d(void)", Ordinals);
 
-		// 调用名称
+		// Call name
 		wsprintfA(pszCallName, "MAKEINTRESOURCE(%d)", Ordinals);
 		return;
 	}
 
-	// 调用名称
+	// Call name
 	wsprintfA(pszCallName, "\"%s\"", pszName);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -627,7 +627,7 @@ VOID WINAPI CAheadLib::GenerateDeclaration(PSTR pszDeclaration, PSTR pszCallName
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 把 RVA 转换为文件偏移
+// RVA convert file offset
 DWORD WINAPI CAheadLib::RvaToOffset(const PIMAGE_NT_HEADERS pInh, DWORD dwRva)
 {
 	INT i;
@@ -651,8 +651,8 @@ DWORD WINAPI CAheadLib::RvaToOffset(const PIMAGE_NT_HEADERS pInh, DWORD dwRva)
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 判断导出函数类型
-EXPORTTYPE WINAPI CAheadLib::GetExportType(PCSTR pszName, PSTR& pAt)
+// Analyzing Export function type
+EXPORTTYPE WINAPI CAheadLib::GetExportType(PSTR pszName, PSTR& pAt)
 {
 	if(pszName == NULL)
 	{
@@ -677,12 +677,12 @@ EXPORTTYPE WINAPI CAheadLib::GetExportType(PCSTR pszName, PSTR& pAt)
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 生成参数列表
+// Generate parameter list
 VOID WINAPI CAheadLib::GenerateParam(PSTR pszBuffer, INT iParamCount)
 {
 	if (iParamCount)
 	{
-		// 参数表
+		// Parameters Table
 		*pszBuffer++ = '(';
 		for (INT i = 0; i < iParamCount; i++)
 		{
@@ -693,7 +693,7 @@ VOID WINAPI CAheadLib::GenerateParam(PSTR pszBuffer, INT iParamCount)
 	}
 	else
 	{
-		// 无参数表
+		// No parameter table
 		lstrcpyA(pszBuffer, "(void)");
 	}
 }
@@ -702,7 +702,7 @@ VOID WINAPI CAheadLib::GenerateParam(PSTR pszBuffer, INT iParamCount)
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 生成 #pragma 导出指示符
+// Generate #pragma export indicator
 VOID WINAPI CAheadLib::PragmaExport(PSTR& pszBuffer, BOOL& bPragmaExport, DWORD Ordinals, PCSTR pszName, BOOL bRedirect)
 {
 	if (bPragmaExport == FALSE)
@@ -735,7 +735,7 @@ VOID WINAPI CAheadLib::PragmaExport(PSTR& pszBuffer, BOOL& bPragmaExport, DWORD 
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 写入到 CPP 文件
+// Write to CPP file
 BOOL WINAPI CAheadLib::WriteCppFile(PCSTR pszBuffer, DWORD dwSize)
 {
 	BOOL bResult;

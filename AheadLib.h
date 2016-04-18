@@ -2,7 +2,7 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 预处理
+// Pretreatment
 #pragma once
 #include <Windows.h>
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -10,7 +10,7 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 结果代码
+// Result Code
 typedef enum tagALRESULT
 {
 	ALResult_Success,
@@ -28,7 +28,7 @@ ALRESULT, *PALRESULT;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 导出函数类型
+// Export function type
 typedef enum tagEXPORTTYPE
 {
 	ET_NONAME,
@@ -43,114 +43,114 @@ EXPORTTYPE, *PEXPORTTYPE;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 结果文本
+// Text Results
 const PTSTR STR_AheadLib_Result[] =
 {
-	TEXT("代码成功生成。"),
-	TEXT("代码成功生成，但是并非所有函数都能直接转发。"),
-	TEXT("参数不完整。"),
-	TEXT("打开 DLL 文件错误。"),
-	TEXT("无效的 PE 文件。"),
-	TEXT("输入文件中不存在导出表。"),
-	TEXT("无法分配内存——开玩笑！什么破机器？"),
-	TEXT("无法写入到 CPP 文件中。")
+	TEXT("Code generated successfully."),
+	TEXT("Code is successfully generated, but not all functions can be forwarded directly."),
+	TEXT("Parameters incomplete."),
+	TEXT("Open DLL with errors."),
+	TEXT("Invalid PE."),
+	TEXT("Enter the file does not exist in the export table."),
+	TEXT("Unable to allocate memory - kidding! What broken machines?"),
+	TEXT("Unable to write to CPP file.")
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 函数类型
+// Function Type
 typedef DWORD (WINAPI *UNDECORATESYMBOLNAME)(PCSTR, PSTR, DWORD, DWORD);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// CAheadLib 类
+// CAheadLib class
 class CAheadLib
 {
 public:
-	static BOOL m_bCallRedirect;							// 直接转发函数
-	static BOOL m_bLoadIfNeed;								// 需要时载入 DLL
-	static BOOL m_bJumpToOrigin;							// 直接转跳到原始函数
-	static BOOL m_bMultiThread ;							// 支持多线程
-	static BOOL m_bSystemPath;								// 系统路径
-	static BOOL m_bGenerateHook;							// 生成 HOOK 代码
-	static TCHAR m_tzDllFile[MAX_PATH];						// 输入 DLL
-	static TCHAR m_tzCppFile[MAX_PATH];						// 输出 CPP
-	static CHAR m_szOriginDll[MAX_PATH];					// 原始 DLL
-	static CHAR m_szOrigin[MAX_PATH];						// 原始名称
+	static BOOL m_bCallRedirect;							// Direct forwarding function
+	static BOOL m_bLoadIfNeed;								// Loading DLL when needed
+	static BOOL m_bJumpToOrigin;							// Skip directly to original function
+	static BOOL m_bMultiThread ;							// It supports multi-threading
+	static BOOL m_bSystemPath;								// System Path
+	static BOOL m_bGenerateHook;							// Generate code HOOK
+	static TCHAR m_tzDllFile[MAX_PATH];						// Enter DLL
+	static TCHAR m_tzCppFile[MAX_PATH];						// Output CPP
+	static CHAR m_szOriginDll[MAX_PATH];					// Original DLL
+	static CHAR m_szOrigin[MAX_PATH];						// Original name
 
 private:
-	static HMODULE m_hDbgHelp;								// DbgHelp 模块句柄
-	static UNDECORATESYMBOLNAME m_pUnDecorateSymbolName;	// UnDecorateSymbolName 函数指针
+	static HMODULE m_hDbgHelp;								// DbgHelp Module handle
+	static UNDECORATESYMBOLNAME m_pUnDecorateSymbolName;	// UnDecorateSymbolName Function pointer
 
 public:
-	// 生成
+	// Generation
 	static ALRESULT WINAPI Generate(BOOL bWriteCppFile = FALSE);
 
-	// 设置选项可用状态
+	// Setting options available state
 	static VOID WINAPI SetOptionsEnabled();
 
-	// 从 INI 中载入选项设置
+	// Loading option settings from INI
 	static VOID WINAPI LoadOptions();
 
-	// 保存选项设置
+	// Save option
 	static VOID WINAPI SaveOptions();
 
-	// 读取选项设置
+	// Read option
 	static VOID WINAPI GetOptions();
 
-	// 获取结果文本
+	// Get Results Text
 	inline static PCTSTR WINAPI GetResult(ALRESULT alResult)
 	{
 		return STR_AheadLib_Result[alResult];
 	}
 
 private:
-	// 生成代码
+	// Generate code
 	static DWORD WINAPI GenerateCode(PSTR pszBuffer, PSTR* ppszNames, DWORD dwBase, DWORD dwCount, BOOL& bLoadOrigin);
 
-	// 生成导出指示符
+	// Generate export indicator
 	static BOOL WINAPI GenerateExport(PSTR& pszBuffer, PSTR* ppszNames, DWORD dwBase, DWORD dwCount);
 
-	// 生成函数
+	// Generating function
 	static VOID WINAPI GenerateFunction(PSTR& pszBuffer, PSTR pszName, DWORD dwBase, DWORD dwIndex);
 
-	// 生成合法的函数名称
+	// Generate legal function name
 	static VOID WINAPI GenerateDeclaration(PSTR pszDeclaration, PSTR pszCallName, PSTR pszName, DWORD Ordinals);
 
-	// 把 RVA 转换为文件偏移
+	// RVA convert file offset
 	static DWORD WINAPI RvaToOffset(const PIMAGE_NT_HEADERS pInh, DWORD dwRva);
 
-	// 判断导出函数类型
-	static EXPORTTYPE WINAPI GetExportType(PCSTR pszName, PSTR& pAt);
+	// Analyzing Export function type
+	static EXPORTTYPE WINAPI GetExportType(PSTR pszName, PSTR& pAt);
 
-	// 生成参数列表
+	// Generate parameter list
 	inline static VOID WINAPI GenerateParam(PSTR pszBuffer, INT iParamCount);
 
-	// 生成 #pragma 导出指示符
+	// Generate #pragma export indicator
 	static VOID WINAPI PragmaExport(PSTR& pszBuffer, BOOL& bPragmaExport, DWORD Ordinals,
 		PCSTR pszName = NULL, BOOL bRedirect = FALSE);
 
-	// 写入到 CPP 文件
+	// Write to CPP file
 	static BOOL WINAPI WriteCppFile(PCSTR pszBuffer, DWORD dwSize);
 
-	// 复制数据并移动指针
+	// Copy the data and move the pointer
 	inline static VOID WINAPI CopyString(PSTR& pszDest, PCSTR pszSrc, SIZE_T sztSize)
 	{
 		CopyMemory(pszDest, pszSrc, sztSize);
 		pszDest += sztSize;
 	}
 
-	// 判断导出名称是否可以被转发
+	// Determining whether export name may be forwarded
 	inline static BOOL WINAPI CanRedirect(PCSTR pszExportName)
 	{
 		return pszExportName && m_bCallRedirect && IsStringLegality(pszExportName);
 	}
 
-	// 判断字符串是否为纯数字串
+	// To determine whether the string is pure numeric string
 	inline static BOOL WINAPI IsStringNumberic(PCSTR pszString)
 	{
 		for (PCSTR p = pszString; *p; p++)
@@ -163,7 +163,7 @@ private:
 		return TRUE;
 	}
 
-	// 判断字符串是否为合法的函数字符串
+	// Analyzing string is a legitimate function strings
 	inline static BOOL WINAPI IsStringLegality(PCSTR pszString)
 	{
 		for (PCSTR p = pszString; *p; p++)

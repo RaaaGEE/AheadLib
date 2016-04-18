@@ -2,7 +2,7 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 预处理
+// Pretreatment
 #pragma once
 #include <Windows.h>
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -10,60 +10,60 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// CMainDlg 类
+// CMainDlg class
 class CMainDlg
 {
 public:
-	static HWND m_hWnd;			// 对话框句柄
+	static HWND m_hWnd;			// Dialog handle
 
 private:
-	static BOOL m_bShowOptions;	// 是否显示选项
+	static BOOL m_bShowOptions;	// Whether Display Options
 
 public:
-	// 显示对话框
+	// Dialog box is displayed
 	inline static INT_PTR WINAPI Show(HINSTANCE hInstance, PCTSTR ptzCmdLine = NULL)
 	{
 		return DialogBoxParam(hInstance, MAKEINTRESOURCE(IDD_Main), NULL, MainDlgProc, (LPARAM) ptzCmdLine);
 	}
 
 private:
-	// 回调函数
+	// Callback function
 	static INT_PTR CALLBACK MainDlgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-	// 初始化
+	// initialization
 	static VOID WINAPI OnInitDialog(LPARAM lParam);
 
-	// 命令处理
+	// Command processing
 	static VOID WINAPI OnCommand(WPARAM wParam);
 
-	// 系统命令处理
+	// Command processing system
 	static VOID WINAPI OnSysCommand(WPARAM wParam);
 
-	// 大小改变
+	// Size changes
 	static VOID WINAPI OnSize(WPARAM wParam, LPARAM lParam);
 
-	// 关闭
+	// shutdown
 	static VOID WINAPI OnClose();
 
-	// 显示隐藏选项
+	// Show hidden options
 	static VOID WINAPI OnOptions();
 
-	// 浏览文件
+	// Browse files
 	static VOID WINAPI OnBrowse(BOOL bDllFile);
 
-	// 消息框
+	// Message Box
 	inline static INT WINAPI MsgBox(PCTSTR ptzText = NULL, UINT uType = MB_ICONINFORMATION)
 	{
 		return MessageBox(m_hWnd, ptzText, STR_AppName, uType);
 	}
 
-	// 错误框
+	// Error box
 	inline static INT WINAPI ErrorBox(PCTSTR ptzText = NULL)
 	{
 		return MsgBox(ptzText, MB_ICONSTOP);
 	}
 
-	// 居中窗口
+	// Center window
 	inline static BOOL WINAPI CenterWindow(INT iWidth, INT iHeight)
 	{
 		return MoveWindow(m_hWnd,
@@ -72,7 +72,7 @@ private:
 			iWidth, iHeight, TRUE);
 	}
 
-	// 拖动文件
+	// Drag file
 	inline static VOID WINAPI OnDropFiles(WPARAM wParam)
 	{
 		TCHAR tzFileName[MAX_PATH];

@@ -2,7 +2,7 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 预处理
+// Pretreatment
 #pragma once
 
 
@@ -20,11 +20,11 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 程序信息
+// Program information
 #define VER_Major				2
 #define VER_Minor				2
-#define VER_Release				150 
-#define VER_Build				650  
+#define VER_Release				151 
+#define VER_Build				659  
 #define VER_Version				MAKELONG(MAKEWORD(VER_Major, VER_Minor), VER_Release)
 
 #define _Stringizing(v)			#v
@@ -45,7 +45,7 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 扩展名
+// extension names
 #define EXT_Chm					TEXT(".chm")
 #define EXT_Dll					TEXT(".dll")
 #define EXT_Exe					TEXT(".exe")
@@ -56,7 +56,7 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// INI 键名
+// INI Keys
 #define INI_Main				STR_AppName
 #define INI_WindowLeft			TEXT("WindowLeft")
 #define INI_WindowTop			TEXT("WindowTop")
@@ -77,29 +77,29 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 常规字符串
-#define	STR_CheckUpdate			TEXT("检查更新")
-#define	STR_VisitWeb			TEXT("访问网站")
-#define	STR_WriteEmail			TEXT("写信给作者")
+// Regular string
+#define	STR_CheckUpdate			TEXT("Check for updates")
+#define	STR_VisitWeb			TEXT("Visit Website")
+#define	STR_WriteEmail			TEXT("Write to author")
 
-#define STR_CheckUpdateTip		TEXT("在 Internet 上检查软件更新信息")
-#define STR_VisitWebTip			TEXT("访问 ") STR_Web
-#define STR_WriteEmailTip		TEXT("写信到 ") STR_Email
+#define STR_CheckUpdateTip		TEXT("On Internet to check for software updates")
+#define STR_VisitWebTip			TEXT("access ") STR_Web
+#define STR_WriteEmailTip		TEXT("Write to ") STR_Email
 
 #define STR_VisitWebUrl			TEXT("http://") STR_Web
 #define STR_WriteEmailUrl		TEXT("mailto:") STR_Email TEXT("?Subject=") STR_AppName
 
-#define STR_VersionStamp		TEXT("版本: ") STR_Version
-#define STR_BuildStamp			TEXT("编译: ") STR_BuilDateTime
-#define STR_Description			TEXT("方便快捷地生成 Trojan DLL 代码。")
-#define STR_Copyright			TEXT("版权所有 (C) 2004 ") STR_Corporation TEXT("，保留所有权利。")
+#define STR_VersionStamp		TEXT("Version: ") STR_Version
+#define STR_BuildStamp			TEXT("Compile: ") STR_BuilDateTime
+#define STR_Description			TEXT("Quickly and easily generate Trojan DLL code.")
+#define STR_Copyright			TEXT("All rights reserved (C) 2004 ") STR_Corporation TEXT(", all rights reserved.")
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 文件扩展名过滤器
-#define FILTER_All				TEXT("所有文件(*.*)\0*.*\0")
-#define FILTER_Dll				TEXT("DLL 文件(*.dll)\0*.dll\0")
-#define FILTER_Cpp				TEXT("CPP 文件(*.cpp)\0*.cpp\0")
+#define FILTER_All				TEXT("All files(*.*)\0*.*\0")
+#define FILTER_Dll				TEXT("DLL file(*.dll)\0*.dll\0")
+#define FILTER_Cpp				TEXT("CPP file(*.cpp)\0*.cpp\0")
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

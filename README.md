@@ -3,8 +3,8 @@ AheadLib
 
 Fake DLL Source Code Generator
 
-AheadLib 2.2.150 - 自动生成一个特洛伊 DLL 分析代码的工具
+AheadLib 2.2.150 - Translated version
 
-![](http://yonsm.net/assets/1097248756.gif)
+![](http://image.zone-game.info/images/2016/04/18/VzulQ.png)
 
 Ref to: <http://yonsm.net/aheadlib/>

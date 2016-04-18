@@ -2,7 +2,7 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 预处理
+// Pretreatment
 #pragma once
 #include "Define.h"
 #include <TChar.h>
@@ -17,7 +17,7 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 错误捕捉
+// Error Capture
 #define _Try
 #define _Assert						_ASSERT
 #define _Finally					__Finally:
@@ -34,7 +34,7 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 安全释放
+// Safe release
 #define _SafeDelete(p)				if (p) {delete p; p = NULL;}
 #define _SafeRelease(p)				if (p) {(p)->Release(); p = NULL;}
 #define _SafeFreeLibrary(h)			if (h) {FreeLibrary(h); h = NULL;}
@@ -47,7 +47,7 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Windows 版本
+// Windows version
 #define _WinVer						_winver
 #define _WinVerMajor				_winmajor
 #define _WinVerMinor				_winminor
@@ -65,7 +65,7 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 常用函数简写
+// Shorthand commonly used functions
 #define _HeapAlloc(n)				HeapAlloc(GetProcessHeap(), 0, n)
 #define _HeapAllocZero(n)			HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, n)
 #define _HeapFree(p)				HeapFree(GetProcessHeap(), 0, (PVOID) p)
@@ -83,16 +83,16 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 限制数值范围
+// Limit value range
 #define _Bound(v, vMin, vMax)		((v > vMax) ? vMax : ((v < vMin) ? vMin : v))
 
-// 矩形宽度和高度
+// Height and width of the rectangle
 #define _RectWidth(r)				((r).right - (r).left)
 #define _RectHeight(r)				((r).bottom - (r).top)
 #define _SmallRectWidth(r)			((r).Right - (r).Left)
 #define _SmallRectHeight(r)			((r).Bottom - (r).Top)
 
-// DIB 计算
+// DIB Compute
 #define _DibAlign(w, i)				((((w * i) + 31) & ~31) / 8)
 #define _DibSize(w, i, h)			(_DibAlign(w, i) * h)
 #define _DibBits(p, w, i, x, y)		(p + _DibAlign(w, i) * y + x * 3)
@@ -100,25 +100,25 @@
 #define _DibSize24(w, h)			(_DibAlign24(w) * h)
 #define _DibBits24(p, w, x, y)		(p + _DibAlign24(w) * y + x * 3)
 
-// 数组元素个数
+// The number of array elements
 #define _NumberOf(v)				(sizeof(v) / sizeof(v[0]))
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 字符串常量的字符个数
+// The number of characters in a string constant
 #define _LengthOf(s)				(_NumberOf(s) - 1)
 
-// 字符串常量的零字符位置
+// Zero character of the string constants
 #define _EndOf(s)					(s + _LengthOf(s))
 
-// 字符串占用的字节数
+// The number of bytes occupied by String
 #define _AStrSize(a)				(lstrlenA(a) + 1)
 #define _WStrSize(w)				((lstrlenW(w) + 1) * sizeof(WCHAR))
 #define _StrSize(t)					((lstrlen(t) + 1) * sizeof(TCHAR))
 
-// 字符串的零字符位置
+// Zero character position of string
 #define _AStrEnd(a)					(a + lstrlenA(a))
 #define _WStrEnd(w)					(w + lstrlenW(w))
 #define _StrEnd(t)					(t + lstrlen(t))
@@ -127,7 +127,7 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 字符串转换拷贝
+// Copy string conversion
 #define _WStrToAStrN(a, w, n)		WideCharToMultiByte(CP_ACP, 0, w, -1, a, n, NULL, NULL)
 #define _AStrToWStrN(w, a, n)		MultiByteToWideChar(CP_ACP, 0, a, -1, w, n)
 #define _StrToStrN(t1, t2, n)		lstrcpyn(t1, t2, n)
@@ -148,7 +148,7 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 字符串转换拷贝到字符数组
+// Copy to convert a string array of characters
 #define _WStrToAStr(a, w)			_WStrToAStrN(a, w, _NumberOf(a))
 #define _AStrToWStr(w, a)			_AStrToWStrN(w, a, _NumberOf(w))
 #define _StrToStr(t1, t2)			_StrToStrN(t1, t2, _NumberOf(t1))
@@ -161,7 +161,7 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 字符串换成整数
+// String into an integer
 #if (_WINVER >= 0x0410)
 #define _AStrToInt(a)				StrToIntA(a)
 #define _WStrToInt(w)				StrToIntW(w)
@@ -180,7 +180,7 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 字符和字符串查找
+// And character string search
 #if (_WINVER >= 0x0410)
 #define _AStrStr(s1, s2)			StrStrA(s1, s2)
 #define _WStrStr(w1, w2)			StrStrW(w1, w2)

@@ -2,7 +2,7 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 预处理
+// Pretreatment
 #include "Main.h"
 #include "MainDlg.h"
 
@@ -12,47 +12,47 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// CMainDlg 类静态成员变量
-HWND CMainDlg::m_hWnd = NULL;			// 对话框句柄
-BOOL CMainDlg::m_bShowOptions = TRUE;	// 是否显示选项
+// CMainDlg Static member variables
+HWND CMainDlg::m_hWnd = NULL;			// Dialog handle
+BOOL CMainDlg::m_bShowOptions = TRUE;	// Whether Display Options
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 回调函数
+// Callback function
 INT_PTR CALLBACK CMainDlg::MainDlgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
 	case WM_INITDIALOG:
-		// 对话框被创建
+		// dialog is created
 		m_hWnd = hWnd;
 		OnInitDialog(lParam);
 		break;
 
 	case WM_COMMAND:
-		// 命令处理
+		// Command processing
 		OnCommand(wParam);
 		break;
 
 	case WM_SYSCOMMAND:
-		// 系统命令处理
+		// Command processing system
 		OnSysCommand(wParam);
 		break;
 
 	case WM_SIZE:
-		// 大小改变
+		// Size changes
 		OnSize(wParam, lParam);
 		break;
 
 	case WM_DROPFILES:
-		// 拖动文件
+		// Drag file
 		OnDropFiles(wParam);
 		break;
 
 	case WM_CLOSE:
-		// 对话框被销毁
+		// Dialog box is destroyed
 		OnClose();
 		break;
 	}
@@ -64,24 +64,24 @@ INT_PTR CALLBACK CMainDlg::MainDlgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 初始化
+// initialization
 VOID WINAPI CMainDlg::OnInitDialog(LPARAM lParam)
 {
 	UINT uTab = 16;
 
-	// 设置图标
+	// Settings icon
 	SetClassLongPtr(m_hWnd, GCL_HICON, (LONG_PTR) LoadIcon(g_hInst, MAKEINTRESOURCE(IDI_Main)));
 
-	// 载入选项设置
+	// Loading option
 	CAheadLib::LoadOptions();
 
-	// 隐藏选项
+	// Hide options
 	if (CIni::GetInt(INI_ShowOptions, TRUE) == FALSE)
 	{
 		OnOptions();
 	}
 
-	// 设置编辑框
+	// Edit box
 	SendDlgItemMessage(m_hWnd, IDC_DllFile, EM_LIMITTEXT, MAX_PATH, 0);
 	SendDlgItemMessage(m_hWnd, IDC_CppFile, EM_LIMITTEXT, MAX_PATH, 0);
 	SendDlgItemMessage(m_hWnd, IDC_OriginDll, EM_LIMITTEXT, MAX_PATH, 0);
@@ -93,7 +93,7 @@ VOID WINAPI CMainDlg::OnInitDialog(LPARAM lParam)
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 命令处理
+// Command processing
 VOID WINAPI CMainDlg::OnCommand(WPARAM wParam)
 {
 	PSTR p;
@@ -102,7 +102,7 @@ VOID WINAPI CMainDlg::OnCommand(WPARAM wParam)
 	switch (LOWORD(wParam))
 	{
 	case IDOK:
-		// 生成文件
+		// Makefile
 		alResult = CAheadLib::Generate(TRUE);
 		MsgBox(CAheadLib::GetResult(alResult), (alResult <= ALResult_NotAllRedirect) ? MB_ICONINFORMATION : MB_ICONSTOP);
 		break;
@@ -130,7 +130,7 @@ VOID WINAPI CMainDlg::OnCommand(WPARAM wParam)
 	case IDC_DllFile:
 		if (HIWORD(wParam) == EN_CHANGE)
 		{
-			// 自动生成输出文件名称
+			// Automatically generated output file name
 			if (GetDlgItemText(m_hWnd, IDC_DllFile, CAheadLib::m_tzDllFile, MAX_PATH))
 			{
 				TCHAR tzTemp[MAX_PATH];
@@ -162,7 +162,7 @@ VOID WINAPI CMainDlg::OnCommand(WPARAM wParam)
 	case IDC_OriginDll:
 		if (HIWORD(wParam) == EN_CHANGE)
 		{
-			// 获取原始 DLL 名称，设置按钮状态
+			// Get original DLL name, set button state
 			GetDlgItemText(m_hWnd, IDC_CppFile, CAheadLib::m_tzCppFile, MAX_PATH);
 			GetDlgItemTextA(m_hWnd, IDC_OriginDll, CAheadLib::m_szOriginDll, MAX_PATH);
 			p = _AStrRChr(CAheadLib::m_szOriginDll, '\\');
@@ -199,7 +199,7 @@ VOID WINAPI CMainDlg::OnCommand(WPARAM wParam)
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 对话框系统命令消息
+// Dialog System Command message
 VOID WINAPI CMainDlg::OnSysCommand(WPARAM wParam)
 {
 	static BOOL s_bRestoreOptions = FALSE;
@@ -226,7 +226,7 @@ VOID WINAPI CMainDlg::OnSysCommand(WPARAM wParam)
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 大小改变
+// Size changes
 VOID WINAPI CMainDlg::OnSize(WPARAM wParam, LPARAM lParam)
 {
 	HWND hCtrl;
@@ -247,12 +247,12 @@ VOID WINAPI CMainDlg::OnSize(WPARAM wParam, LPARAM lParam)
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 对话框销毁消息
+// Dialog destroy message
 VOID WINAPI CMainDlg::OnClose()
 {
 	//WINDOWPLACEMENT wpWindow;
 
-	// 保存对话框位置信息
+	// Save dialog location information
 	//wpWindow.length = sizeof(WINDOWPLACEMENT);
 	//GetWindowPlacement(m_hWnd, &wpWindow);
 	//CIni::SetInt(INI_WindowLeft, wpWindow.rcNormalPosition.left);
@@ -261,11 +261,11 @@ VOID WINAPI CMainDlg::OnClose()
 	//CIni::SetInt(INI_WindowHeight, _RectHeight(wpWindow.rcNormalPosition));
 	//CIni::SetInt(INI_WindowState, wpWindow.showCmd);
 
-	// 保存选项
+	// Save Options
 	CAheadLib::SaveOptions();
 	CIni::SetInt(INI_ShowOptions, m_bShowOptions);
 
-	// 关闭对话框
+	// Close dialog
 	EndDialog(m_hWnd, 0);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -273,7 +273,7 @@ VOID WINAPI CMainDlg::OnClose()
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 显示隐藏选项
+// Show hidden options
 VOID WINAPI CMainDlg::OnOptions()
 {
 	if (IsZoomed(m_hWnd))
@@ -301,7 +301,7 @@ VOID WINAPI CMainDlg::OnOptions()
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 浏览文件
+// Browse files
 VOID WINAPI CMainDlg::OnBrowse(BOOL bDllFile)
 {
 	OPENFILENAME ofnName;
